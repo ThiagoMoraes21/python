@@ -32,6 +32,32 @@ target = pygame.rect.Rect([0, 0, pixel_width - 2, pixel_width - 2])
 # generate random starting position for target
 target.center = generate_starting_position()
 
+def update_snake_direction():
+    global snake_direction
+    key_pressed = pygame.key.get_pressed()
+
+    if key_pressed[pygame.K_UP]:# and snake_direction != (0, pixel_width):
+        snake_direction = (0, -pixel_width)
+    if key_pressed[pygame.K_DOWN]:# and snake_direction != (0, -pixel_width):
+        snake_direction = (0, pixel_width)
+    if key_pressed[pygame.K_RIGHT]:# and snake_direction != (-pixel_width, 0):
+        snake_direction = (pixel_width, 0)
+    if key_pressed[pygame.K_LEFT]:# and snake_direction != (pixel_width, 0):
+        snake_direction = (-pixel_width, 0)
+
+def set_snake_boundaries():
+    global snake_pixel
+    if snake_pixel.left < 0:
+        snake_pixel.left = pixel_width
+    if snake_pixel.right > screen_width:
+        snake_pixel.right = screen_width - pixel_width
+    if snake_pixel.top < 0:
+        snake_pixel.top = pixel_width
+    if snake_pixel.bottom > screen_height:
+        snake_pixel.bottom = screen_height - pixel_width
+
+
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -46,27 +72,10 @@ while running:
 
 
     # identify the key being pressed to update the snake direction
-    key_pressed = pygame.key.get_pressed()
-    if key_pressed[pygame.K_UP]:# and snake_direction != (0, pixel_width):
-        snake_direction = (0, -pixel_width)
-    if key_pressed[pygame.K_DOWN]:# and snake_direction != (0, -pixel_width):
-        snake_direction = (0, pixel_width)
-    if key_pressed[pygame.K_RIGHT]:# and snake_direction != (-pixel_width, 0):
-        snake_direction = (pixel_width, 0)
-    if key_pressed[pygame.K_LEFT]:# and snake_direction != (pixel_width, 0):
-        snake_direction = (-pixel_width, 0)
-
-
+    update_snake_direction()
 
     # Check if the snake hits the screen boundaries
-    if snake_pixel.left < 0:
-        snake_pixel.left = pixel_width
-    if snake_pixel.right > screen_width:
-        snake_pixel.right = screen_width - pixel_width
-    if snake_pixel.top < 0:
-        snake_pixel.top = pixel_width
-    if snake_pixel.bottom > screen_height:
-        snake_pixel.bottom = screen_height - pixel_width
+    set_snake_boundaries()
 
     # move the snake
     snake_pixel.move_ip(snake_direction)
